@@ -1,15 +1,18 @@
 package com.example.employeepayrollapp.Controller;
-import lombok.extern.slf4j.Slf4j;
 import com.example.employeepayrollapp.Model.Employee;
 import com.example.employeepayrollapp.service.EmployeeService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-
+import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Optional;
-@Slf4j
+
+@Slf4j  // Enables logging
 @RestController
+@Validated  // Enables method-level validation
 @RequestMapping("/employees")
 public class EmployeeController {
     private final EmployeeService employeeService;
@@ -33,7 +36,7 @@ public class EmployeeController {
 
     // POST: Add a new employee
     @PostMapping
-    public Employee createEmployee(@RequestBody Employee employee) {
+    public Employee createEmployee(@Valid @RequestBody Employee employee) {
         return employeeService.createEmployee(employee);
     }
 
