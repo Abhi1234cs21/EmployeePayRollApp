@@ -1,13 +1,14 @@
 package com.example.employeepayrollapp.Controller;
-
+import lombok.extern.slf4j.Slf4j;
 import com.example.employeepayrollapp.Model.Employee;
 import com.example.employeepayrollapp.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+
 import java.util.List;
 import java.util.Optional;
-
+@Slf4j
 @RestController
 @RequestMapping("/employees")
 public class EmployeeController {
