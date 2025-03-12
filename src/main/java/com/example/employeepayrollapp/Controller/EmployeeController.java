@@ -1,10 +1,14 @@
 package com.example.employeepayrollapp.Controller;
+
+
+import com.example.employeepayrollapp.exceptions.EmployeeNotFoundException;
 import com.example.employeepayrollapp.Model.Employee;
 import com.example.employeepayrollapp.service.EmployeeService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
 
 import jakarta.validation.Valid;
 import java.util.List;
@@ -34,21 +38,37 @@ public class EmployeeController {
         return employeeService.getEmployeeById(id);
     }
 
-    // POST: Add a new employee
+    // POST: Add a new employee with validation
     @PostMapping
     public Employee createEmployee(@Valid @RequestBody Employee employee) {
-        return employeeService.createEmployee(employee);
+        try {
+            return employeeService.createEmployee(employee);
+        } catch (Exception e) {
+            throw new RuntimeException("Error creating employee: " + e.getMessage());
+        }
     }
 
-    // PUT: Update an employee
     @PutMapping("/{id}")
-    public Optional<Employee> updateEmployee(@PathVariable Long id, @RequestBody Employee updatedEmployee) {
-        return employeeService.updateEmployee(id, updatedEmployee);
+    public Employee updateEmployee(@PathVariable Long id, @Valid @RequestBody Employee updatedEmployee) {
+        try {
+            return employeeService.updateEmployee(id, updatedEmployee);
+        } catch (EmployeeNotFoundException e) {
+            throw new EmployeeNotFoundException("Employee not found with ID: " + id);
+        } catch (Exception e) {
+            throw new RuntimeException("Error updating employee: " + e.getMessage());
+        }
     }
+
 
     // DELETE: Remove an employee
     @DeleteMapping("/{id}")
-    public void deleteEmployee(@PathVariable Long id) {
-        employeeService.deleteEmployee(id);
+    public String deleteEmployee(@PathVariable Long id) {
+        try {
+            employeeService.deleteEmployee(id);
+            return "Employee deleted successfully";
+        } catch (Exception e) {
+            throw new RuntimeException("Error deleting employee: " + e.getMessage());
+        }
+
     }
 }
